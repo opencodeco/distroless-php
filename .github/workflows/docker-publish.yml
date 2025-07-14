@@ -20,7 +20,7 @@ jobs:
     
     strategy:
       matrix:
-        php-version: ['8.1', '8.2', '8.3']
+        php-version: ['8.1', '8.2', '8.3', '8.4']
         include:
           - php-version: '8.1'
             dockerfile: '8.1/Dockerfile'
@@ -28,6 +28,8 @@ jobs:
             dockerfile: '8.2/Dockerfile'
           - php-version: '8.3'
             dockerfile: '8.3/Dockerfile'
+          - php-version: '8.4'
+            dockerfile: '8.4/Dockerfile'
 
     steps:
       - name: Checkout repository
