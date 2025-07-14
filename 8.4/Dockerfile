@@ -1,7 +1,7 @@
 FROM alpine AS dl
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
-      wget -O- https://dl.static-php.dev/static-php-cli/bulk/php-8.4.8-cli-linux-x86_64.tar.gz | tar xz -C /usr/local/bin; \
+      wget -O- https://dl.static-php.dev/static-php-cli/bulk/php-8.4.6-cli-linux-x86_64.tar.gz | tar xz -C /usr/local/bin; \
     else \
       wget -O- https://dl.static-php.dev/static-php-cli/bulk/php-8.4.8-cli-linux-aarch64.tar.gz | tar xz -C /usr/local/bin; \
     fi
