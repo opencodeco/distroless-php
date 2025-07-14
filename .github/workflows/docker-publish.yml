@@ -56,9 +56,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch,suffix=-php${{ matrix.php-version }}
-            type=ref,event=pr,suffix=-php${{ matrix.php-version }}
-            type=raw,value=php${{ matrix.php-version }},enable={{is_default_branch}}
+            type=raw,value=${{ matrix.php-version }},enable={{is_default_branch}}
 
       - name: Build and push Docker image
         id: build-and-push
