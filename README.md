@@ -10,6 +10,29 @@
 FROM ghcr.io/opencodeco/distroless-php:8.3
 ```
 
+### Available PHP Versions
+
+- `8.1` - PHP 8.1.30
+- `8.2` - PHP 8.2.23  
+- `8.3` - PHP 8.3.9
+- `8.4` - PHP 8.4.6
+
+## Building
+
+Images are automatically built and published via GitHub Actions for all supported PHP versions. Patch versions are managed in the GitHub Actions workflow configuration.
+
+### Manual Build
+
+If you need to build locally, use the build arguments:
+
+```bash
+docker build \
+  --build-arg PHP_VERSION=8.3.9 \
+  -t ghcr.io/opencodeco/distroless-php:8.3 .
+```
+
+Available PHP_VERSION values: `8.1.30`, `8.2.23`, `8.3.9`, `8.4.6`
+
 ### Example
 
 ```dockerfile
