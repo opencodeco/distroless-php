@@ -33,6 +33,12 @@ jobs:
         # Extract ARM64 binary  
         unzip php-cli-8.3-linux-aarch64-glibc.zip -d ./php-binaries/arm64
         chmod +x ./php-binaries/arm64/php
+        
+        # Verify binaries exist
+        ls -la ./php-binaries/amd64/php
+        ls -la ./php-binaries/arm64/php
+        file ./php-binaries/amd64/php
+        file ./php-binaries/arm64/php
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
