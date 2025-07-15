@@ -2,6 +2,10 @@ name: Build and push container image
 
 on:
   workflow_dispatch:
+    inputs:
+      run-id:
+        description: Workdlow run ID
+        type: number
 
 env:
   REGISTRY: ghcr.io
@@ -26,6 +30,8 @@ jobs:
 
     - name: Download PHP artifacts
       uses: actions/download-artifact@v4
+      with:
+        run-id: ${{ github.event.inputs.run-id }}
 
     - name: Verify artifacts
       run: |
