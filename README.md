@@ -30,8 +30,8 @@ The project uses GitHub Actions to automatically build and push Docker images:
 
 ### Architecture Support
 
-- **AMD64** (x86_64): Built using `php-cli-8.3-linux-x86_64-glibc.zip`
-- **ARM64** (aarch64): Built using `php-cli-8.3-linux-aarch64-glibc.zip`
+- **AMD64** (x86_64): Built using pre-compiled PHP binaries
+- **ARM64** (aarch64): Built using pre-compiled PHP binaries
 
 ### Manual Build
 
@@ -66,8 +66,6 @@ This project combines static PHP binaries with Google's Distroless base images t
 ```
 ├── Dockerfile                                    # Multi-arch Dockerfile
 ├── Makefile                                      # Build and test targets
-├── php-cli-8.3-linux-x86_64-glibc.zip          # AMD64 PHP binary
-├── php-cli-8.3-linux-aarch64-glibc.zip         # ARM64 PHP binary
 └── .github/workflows/build.yml                  # CI/CD pipeline
 ```
 

@@ -39,7 +39,7 @@ This repository provides **distroless PHP container images** that combine:
 - `Dockerfile`: Multi-arch build configuration
 - `Makefile`: Build and test automation
 - `extensions.csv`: List of included PHP extensions
-- `php-cli-8.3-linux-{arch}-glibc.zip`: Pre-compiled PHP binaries
+- Pre-compiled PHP binaries are obtained from external sources during build
 - GitHub Actions: Automated CI/CD pipeline
 
 ## Best Practices for This Project
