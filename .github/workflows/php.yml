@@ -1,0 +1,48 @@
+name: Build PHP
+
+on:
+  workflow_dispatch:
+
+env:
+  EXTENSIONS: amqp,apcu,ast,bcmath,brotli,calendar,ctype,curl,dom,ds,exif,ffi,fileinfo,filter,gd,gettext,grpc,iconv,igbinary,imagick,inotify,intl,ldap,libxml,mbregex,mbstring,memcache,memcached,mongodb,msgpack,mysqli,mysqlnd,opcache,openssl,opentelemetry,parallel,password-argon2,pcntl,pdo,pdo_mysql,pdo_odbc,pdo_sqlsrv,pgsql,phar,posix,rdkafka,readline,redis,session,shmop,simplexml,soap,sockets,sodium,sqlite3,swoole,swoole-hook-mysql,swoole-hook-pgsql,swoole-hook-sqlite,tokenizer,xlswriter,xml,xmlreader,xmlwriter,xsl,yaml,zip,zlib,zstd
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    
+    runs-on: ${{ matrix.runner }}
+    name: "Build ${{ matrix.arch }}"
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: crazywhalecc/static-php-cli
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          tools: pecl, composer
+          extensions: curl, openssl, mbstring
+          ini-values: memory_limit=-1
+        env:
+          phpts: nts
+
+      - uses: actions/cache@v4
+        with:
+          path: downloads
+          key: php-dependencies
+      
+      - run: ./bin/spc-gnu-docker download --with-php=8.3 --for-extensions=${{ env.EXTENSIONS }}
+      - run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: php83-${{ matrix.arch }}
+          path: buildroot/bin/php
