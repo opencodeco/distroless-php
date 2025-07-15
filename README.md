@@ -71,3 +71,22 @@ COPY --from=build --chown=nonroot:nonroot /workspace /app
 CMD [ "/app/bin/hyperf.php", "start" ]
 EXPOSE 9501
 ```
+
+## Testing
+
+To test the image locally, you can run:
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/opencodeco/distroless-php:8.3
+
+# Run a simple PHP script
+docker run --rm -v $(pwd)/test.php:/test.php ghcr.io/opencodeco/distroless-php:8.3 /test.php
+
+# Run PHP with command line arguments
+docker run --rm ghcr.io/opencodeco/distroless-php:8.3 --version
+```
+
+### Multi-architecture Support
+
+The image supports both AMD64 and ARM64 architectures. Docker will automatically pull the correct image for your platform.
