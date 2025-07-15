@@ -47,10 +47,10 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        args: |
+        build-args: |
           PHPVERSION: ${{ matrix.php }}
         platforms: linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:8.3
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
