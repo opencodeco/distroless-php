@@ -16,10 +16,8 @@ jobs:
     strategy:
       matrix:
         php: ['8.3']
-        arch: [amd64, arm64]
-    
     runs-on: ubuntu-latest
-    name: "Build and push ${{ matrix.arch }}"
+    name: "Build and push ${{ matrix.php }}"
     permissions:
       contents: read
       packages: write
@@ -33,10 +31,6 @@ jobs:
       with:
         run-id: ${{ github.event.inputs.php-run-id }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Verify artifacts
-      run: |
-        ls -la
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -53,7 +47,9 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        platforms: linux/amd64,linux/arm64
+        args: |
+          PHPVERSION: ${{ matrix.php }}
+        platforms: linux/arm64
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:8.3
         cache-from: type=gha
