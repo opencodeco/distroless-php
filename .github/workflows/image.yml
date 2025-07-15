@@ -3,8 +3,8 @@ name: Build and push container image
 on:
   workflow_dispatch:
     inputs:
-      run-id:
-        description: Workflow run ID
+      php-run-id:
+        description: PHP workflow run ID
         type: number
 
 env:
@@ -31,7 +31,7 @@ jobs:
     - name: Download PHP artifacts
       uses: actions/download-artifact@v4
       with:
-        run-id: ${{ github.event.inputs.run-id }}
+        run-id: ${{ github.event.inputs.php-run-id }}
 
     - name: Verify artifacts
       run: |
