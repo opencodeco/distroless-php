@@ -32,6 +32,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         run-id: ${{ github.event.inputs.php-run-id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Verify artifacts
       run: |
