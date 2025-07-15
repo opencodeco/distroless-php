@@ -24,47 +24,56 @@ This repository provides **distroless PHP container images** that combine:
 ## Technical Architecture
 
 ### Build Process
-- Uses multi-stage Docker builds with Alpine as build stage
-- Extracts pre-compiled PHP binaries based on target architecture
+- Uses a two-stage GitHub Actions pipeline:
+  1. **PHP Build** (`php.yml`): Compiles static PHP binaries for multiple versions (8.1-8.4) and architectures
+  2. **Image Build** (`image.yml`): Creates Docker images using the compiled binaries
 - Final stage uses `gcr.io/distroless/cc-debian12:nonroot` base image
 - Supports both `linux/amd64` and `linux/arm64` platforms
+- Uses GitHub Container Registry for image distribution
 
 ### PHP Configuration
-- **Version**: PHP 8.3 (current focus)
-- **Extensions**: 60+ included extensions (see `extensions.csv`)
+- **Versions**: PHP 8.1, 8.2, 8.3, 8.4 (all supported)
+- **Extensions**: 60+ included extensions (defined in `php.yml` workflow)
 - **Binary location**: `/bin/php` in final image
 - **User**: Runs as non-root user for security
 
 ### Project Structure
-- `Dockerfile`: Multi-arch build configuration
-- `Makefile`: Build and test automation
-- `extensions.csv`: List of included PHP extensions
-- Pre-compiled PHP binaries are obtained from external sources during build
-- GitHub Actions: Automated CI/CD pipeline
+- `Dockerfile`: Minimal multi-arch configuration with build arguments
+- `.github/workflows/php.yml`: PHP binary compilation pipeline
+- `.github/workflows/image.yml`: Docker image build and push pipeline
+- `.github/copilot-instructions.md`: Development guidelines
+- Pre-compiled PHP binaries are built via GitHub Actions using static-php-cli
 
 ## Best Practices for This Project
 
 ### When working with the Dockerfile:
 - Always consider multi-architecture implications
 - Minimize layers and build context
-- Use appropriate ARG variables for target architecture
+- Use appropriate ARG variables (PHPVERSION, TARGETARCH) for target architecture
 - Follow security best practices (non-root user, minimal permissions)
 
+### When working with workflows:
+- **PHP Build Workflow**: Triggered manually via workflow_dispatch
+- **Image Build Workflow**: Requires a PHP workflow run ID as input
+- Test on both AMD64 and ARM64 architectures using matrix strategy
+- Extensions are defined in the `EXTENSIONS` environment variable in `php.yml`
+- Current image builds focus on PHP 8.3 but can be expanded via matrix strategy
+
 ### When modifying build processes:
-- Test on both AMD64 and ARM64 architectures
+- Test on both AMD64 and ARM64 architectures using matrix strategy
 - Validate that all required PHP extensions are included
 - Ensure the final image size remains minimal
 - Verify security scanning passes
 
 ### When updating dependencies:
-- Use specific versions for reproducible builds
+- Update the static-php-cli version in `php.yml` workflow if needed
 - Consider the impact on both architectures
 - Update documentation accordingly
 - Test with real-world PHP applications
 
 ## Common Tasks
 
-- **Adding new PHP versions**: Update binary files, Dockerfile, and CI/CD
-- **Modifying extensions**: Update `extensions.csv` and rebuild binaries
+- **Adding new PHP versions**: Update the matrix strategy in both `php.yml` and `image.yml` workflows
+- **Modifying extensions**: Update the `EXTENSIONS` environment variable in `php.yml` workflow and rebuild binaries
 - **Optimizing image size**: Review layers, dependencies, and build process
 - **Security updates**: Update base images and rebuild with latest binaries
