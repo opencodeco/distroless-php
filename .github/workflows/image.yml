@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run-id:
-        description: Workdlow run ID
+        description: Workflow run ID
         type: number
 
 env:
