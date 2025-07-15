@@ -20,52 +20,73 @@ Images are automatically built and published via GitHub Actions using pre-compil
 
 ### CI/CD Pipeline
 
-The project uses GitHub Actions to automatically build and push Docker images:
+The project uses a two-stage GitHub Actions pipeline:
 
-- **Triggers**: Pushes to `main` branch and pull requests
-- **Registry**: GitHub Container Registry (`ghcr.io`)
-- **Platforms**: `linux/amd64` and `linux/arm64`
-- **Caching**: Uses GitHub Actions cache for faster builds
-- **Authentication**: Uses `GITHUB_TOKEN` for registry access
+1. **PHP Build** (`php.yml`): Builds static PHP binaries for both architectures
+   - **Triggers**: Manual workflow dispatch
+   - **Platforms**: `linux/amd64` and `linux/arm64`
+   - **Extensions**: 60+ extensions including amqp, apcu, ast, bcmath, brotli, calendar, ctype, curl, dom, exif, gd, imagick, mongodb, mysql, redis, swoole, and many more
+   - **Artifacts**: Uploads compiled PHP binaries as GitHub artifacts
+
+2. **Image Build** (`image.yml`): Creates Docker images using the PHP binaries
+   - **Triggers**: Manual workflow dispatch (requires PHP workflow run ID)
+   - **Registry**: GitHub Container Registry (`ghcr.io`)
+   - **Platform**: Currently `linux/arm64` (configurable)
+   - **Caching**: Uses GitHub Actions cache for faster builds
+   - **Authentication**: Uses `GITHUB_TOKEN` for registry access
 
 ### Architecture Support
 
 - **AMD64** (x86_64): Built using pre-compiled PHP binaries
 - **ARM64** (aarch64): Built using pre-compiled PHP binaries
 
-### Manual Build
+### Build Process
 
-To build locally, you need the PHP binary directories in the project directory:
+The complete build process consists of two stages:
 
-```bash
-# Using Make (recommended)
-make 8.3
+1. **PHP Binary Compilation** (`php.yml`):
+   - Checks out the [static-php-cli](https://github.com/crazywhalecc/static-php-cli) repository
+   - Sets up PHP 8.4 build environment
+   - Downloads dependencies and compiles PHP with all extensions
+   - Creates static PHP binaries for both AMD64 and ARM64 architectures
+   - Uploads binaries as GitHub artifacts
 
-# Test the built image
-make 8.3-test
-
-# Multi-arch build (requires Docker Buildx)
-docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/opencodeco/distroless-php:8.3 .
-
-# Single architecture build
-docker build -t ghcr.io/opencodeco/distroless-php:8.3 .
-```
+2. **Docker Image Creation** (`image.yml`):
+   - Downloads the PHP binary artifacts from the previous workflow
+   - Uses multi-stage Docker build with distroless base image
+   - Copies the appropriate PHP binary based on target architecture
+   - Creates minimal container image with only PHP binary and distroless base
+   - Pushes to GitHub Container Registry
 
 ## How it Works
 
 This project combines static PHP binaries with Google's Distroless base images to create minimal, secure PHP runtime containers:
 
-1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) are obtained during the build process
-2. **Multi-arch Build**: Docker Buildx automatically selects the correct binary (AMD64 or ARM64) during build
+1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) are built with 60+ extensions including popular ones like Redis, MySQL, MongoDB, Swoole, ImageMagick, and more
+2. **Multi-arch Build**: Docker build process uses architecture-specific binaries (AMD64 or ARM64) via build arguments
 3. **Distroless Base**: Uses `gcr.io/distroless/cc-debian12:nonroot` for minimal attack surface and runs as non-root user
 4. **No OS**: Final images contain only the PHP binary and distroless base - no package managers, shells, or unnecessary tools
+
+### Included PHP Extensions
+
+The PHP binaries include 60+ extensions:
+- **Core**: bcmath, calendar, ctype, curl, dom, exif, fileinfo, filter, iconv, intl, mbstring, opcache, openssl, pcntl, pdo, phar, posix, session, shmop, simplexml, soap, sockets, sodium, sqlite3, tokenizer, xml, xmlreader, xmlwriter, xsl, zip, zlib
+- **Caching**: apcu, memcache, memcached, redis
+- **Database**: mysqli, mysqlnd, pdo_mysql, pgsql, mongodb
+- **Messaging**: amqp, rdkafka
+- **Performance**: swoole, swoole-hook-mysql, swoole-hook-pgsql, swoole-hook-sqlite, parallel, zstd
+- **Graphics**: gd, imagick
+- **Development**: ast, ffi, xdebug (if enabled)
+- **Serialization**: igbinary, msgpack, yaml
+- **Monitoring**: opentelemetry
+- **Utilities**: brotli, ds, gettext, inotify, ldap, libxml, password-argon2, readline, xlswriter
 
 ### Project Structure
 
 ```
-├── Dockerfile                                    # Multi-arch Dockerfile
-├── Makefile                                      # Build and test targets
-└── .github/workflows/build.yml                  # CI/CD pipeline
+├── Dockerfile                                    # Multi-arch Dockerfile with build arguments
+├── .github/workflows/php.yml                    # PHP binary build pipeline
+└── .github/workflows/image.yml                  # Docker image build pipeline
 ```
 
 ### Example
