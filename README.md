@@ -18,6 +18,16 @@ FROM ghcr.io/opencodeco/distroless-php:8.3
 
 Images are automatically built and published via GitHub Actions using pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli). The build process uses multi-architecture Docker builds to support both AMD64 and ARM64 platforms.
 
+### CI/CD Pipeline
+
+The project uses GitHub Actions to automatically build and push Docker images:
+
+- **Triggers**: Pushes to `main` branch and pull requests
+- **Registry**: GitHub Container Registry (`ghcr.io`)
+- **Platforms**: `linux/amd64` and `linux/arm64`
+- **Caching**: Uses GitHub Actions cache for faster builds
+- **Authentication**: Uses `GITHUB_TOKEN` for registry access
+
 ### Architecture Support
 
 - **AMD64** (x86_64): Built using `php-cli-8.3-linux-x86_64-glibc.zip`
@@ -28,6 +38,12 @@ Images are automatically built and published via GitHub Actions using pre-compil
 To build locally, you need the PHP binary zip files in the project directory:
 
 ```bash
+# Using Make (recommended)
+make 8.3
+
+# Test the built image
+make 8.3-test
+
 # Multi-arch build (requires Docker Buildx)
 docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/opencodeco/distroless-php:8.3 .
 
@@ -40,14 +56,16 @@ docker build -t ghcr.io/opencodeco/distroless-php:8.3 .
 This project combines static PHP binaries with Google's Distroless base images to create minimal, secure PHP runtime containers:
 
 1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) are included as zip files in the repository
-2. **Multi-arch Build**: Docker Buildx extracts the appropriate binary for each target architecture during build
-3. **Distroless Base**: Uses `gcr.io/distroless/cc-debian12:nonroot` for minimal attack surface
-4. **No OS**: Final images contain only the PHP binary and distroless base - no package managers, shells, or unnecessary tools
+2. **Multi-stage Build**: Docker uses an Alpine-based extractor stage to unzip the appropriate binary for each target architecture
+3. **Multi-arch Build**: Docker Buildx automatically selects the correct binary (AMD64 or ARM64) during build
+4. **Distroless Base**: Uses `gcr.io/distroless/cc-debian12:nonroot` for minimal attack surface and runs as non-root user
+5. **No OS**: Final images contain only the PHP binary and distroless base - no package managers, shells, or unnecessary tools
 
 ### Project Structure
 
 ```
 ├── Dockerfile                                    # Multi-arch Dockerfile
+├── Makefile                                      # Build and test targets
 ├── php-cli-8.3-linux-x86_64-glibc.zip          # AMD64 PHP binary
 ├── php-cli-8.3-linux-aarch64-glibc.zip         # ARM64 PHP binary
 └── .github/workflows/build.yml                  # CI/CD pipeline
@@ -71,22 +89,3 @@ COPY --from=build --chown=nonroot:nonroot /workspace /app
 CMD [ "/app/bin/hyperf.php", "start" ]
 EXPOSE 9501
 ```
-
-## Testing
-
-To test the image locally, you can run:
-
-```bash
-# Pull the latest image
-docker pull ghcr.io/opencodeco/distroless-php:8.3
-
-# Run a simple PHP script
-docker run --rm -v $(pwd)/test.php:/test.php ghcr.io/opencodeco/distroless-php:8.3 /test.php
-
-# Run PHP with command line arguments
-docker run --rm ghcr.io/opencodeco/distroless-php:8.3 --version
-```
-
-### Multi-architecture Support
-
-The image supports both AMD64 and ARM64 architectures. Docker will automatically pull the correct image for your platform.
