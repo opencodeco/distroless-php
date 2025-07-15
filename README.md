@@ -41,7 +41,7 @@ This project combines static PHP binaries with Google's Distroless base images t
 
 1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) are included as zip files in the repository
 2. **Multi-arch Build**: Docker Buildx extracts the appropriate binary for each target architecture during build
-3. **Distroless Base**: Uses `gcr.io/distroless/static-debian12:nonroot` for minimal attack surface
+3. **Distroless Base**: Uses `gcr.io/distroless/cc-debian12:nonroot` for minimal attack surface
 4. **No OS**: Final images contain only the PHP binary and distroless base - no package managers, shells, or unnecessary tools
 
 ### Project Structure
