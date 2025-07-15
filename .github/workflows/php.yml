@@ -12,14 +12,14 @@ jobs:
     strategy:
       matrix:
         php: ['8.3']
-        include:
+        platform:
           - arch: amd64
             runner: ubuntu-latest
           - arch: arm64
             runner: ubuntu-24.04-arm
     
-    runs-on: ${{ matrix.runner }}
-    name: "Build ${{ matrix.arch }}"
+    runs-on: ${{ matrix.platform.runner }}
+    name: "Build ${{ matrix.php }} ${{ matrix.platform.arch }}"
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
@@ -45,5 +45,5 @@ jobs:
       
       - uses: actions/upload-artifact@v4
         with:
-          name: php${{ matrix.php }}-${{ matrix.arch }}
+          name: php${{ matrix.php }}-${{ matrix.platform.arch }}
           path: buildroot/bin/php
