@@ -26,6 +26,12 @@ jobs:
         with:
           repository: crazywhalecc/static-php-cli
 
+      - name: Update Swoole version to v5.1.7
+        run: |
+          sed -i 's/"swoole\.rev": "[^"]*"/"swoole.rev": "v5.1.7"/' config/source.json
+          echo "Updated swoole.rev to v5.1.7"
+          grep -A 1 -B 1 "swoole.rev" config/source.json || echo "swoole.rev not found in config file"
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
