@@ -38,20 +38,6 @@ jobs:
           echo "Updated mongodb match to 1.x versions only"
           grep -A 5 -B 1 '"mongodb"' config/source.json || echo "mongodb not found in config file"
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.4
-          tools: pecl, composer
-          extensions: curl, openssl, mbstring
-          ini-values: memory_limit=-1
-        env:
-          phpts: nts
-
-      - uses: actions/cache@v4
-        with:
-          path: downloads
-          key: php-dependencies
-      - run: composer install --prefer-dist --no-dev
       - run: ./bin/spc-alpine-docker download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
       - run: ./bin/spc-alpine-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
       
