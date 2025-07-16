@@ -39,7 +39,7 @@ jobs:
           grep -A 5 -B 1 '"mongodb"' config/source.json || echo "mongodb not found in config file"
       
       - run: ./bin/spc-gnu-docker download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
-      - run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
+      - run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli --debug
       
       - uses: actions/upload-artifact@v4
         with:
