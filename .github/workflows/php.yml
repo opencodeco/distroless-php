@@ -66,3 +66,4 @@ jobs:
         with:
           name: php${{ matrix.php.version }}-${{ matrix.platform.arch }}
           path: buildroot/bin/php
+  
