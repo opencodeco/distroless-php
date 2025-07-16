@@ -52,8 +52,8 @@ jobs:
           path: downloads
           key: php-dependencies
       - run: composer install --prefer-dist --no-dev
-      - run: ./bin/spc download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
-      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli
+      - run: ./bin/spc-alpine-docker download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
+      - run: ./bin/spc-alpine-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
       
       - uses: actions/upload-artifact@v4
         with:
