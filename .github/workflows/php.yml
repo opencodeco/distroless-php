@@ -11,7 +11,15 @@ jobs:
   build:
     strategy:
       matrix:
-        php: ['8.1','8.2','8.3','8.4']
+        php:
+          - version: 8.1
+            swoole: v5.1.7
+          - version: 8.2
+            swoole: v5.1.7
+          - version: 8.3
+            swoole: v5.1.7
+          - version: 8.4
+            swoole: v6.0.2
         platform:
           - arch: amd64
             runner: ubuntu-24.04
@@ -19,17 +27,17 @@ jobs:
             runner: ubuntu-24.04-arm
     
     runs-on: ${{ matrix.platform.runner }}
-    name: "Build ${{ matrix.php }} ${{ matrix.platform.arch }}"
+    name: "Build ${{ matrix.php.version }} ${{ matrix.platform.arch }}"
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
         with:
           repository: crazywhalecc/static-php-cli
 
-      - name: Update Swoole version to v5.1.7
+      - name: Update Swoole version to ${{ matrix.php.swoole }}
         run: |
-          sed -i '/"swoole": {/,/}/ s/"rev": "[^"]*"/"rev": "v5.1.7"/' config/source.json
-          echo "Updated swoole rev to v5.1.7"
+          sed -i '/"swoole": {/,/}/ s/"rev": "[^"]*"/"rev": "${{ matrix.php.swoole }}"/' config/source.json
+          echo "Updated swoole rev to ${{ matrix.php.swoole }}"
           grep -A 5 -B 1 '"swoole"' config/source.json || echo "swoole not found in config file"
 
       - name: Update MongoDB driver to 1.x versions only
@@ -38,10 +46,10 @@ jobs:
           echo "Updated mongodb match to 1.x versions only"
           grep -A 5 -B 1 '"mongodb"' config/source.json || echo "mongodb not found in config file"
       
-      - run: ./bin/spc-gnu-docker download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
+      - run: ./bin/spc-gnu-docker download --with-php=${{ matrix.php.version }} --for-extensions=${{ env.EXTENSIONS }}
       - run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli --debug
       
       - uses: actions/upload-artifact@v4
         with:
-          name: php${{ matrix.php }}-${{ matrix.platform.arch }}
+          name: php${{ matrix.php.version }}-${{ matrix.platform.arch }}
           path: buildroot/bin/php
