@@ -14,9 +14,9 @@ jobs:
         php: ['8.3']
         platform:
           - arch: amd64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04
           - arch: arm64
-            runner: ubuntu-latest-arm
+            runner: ubuntu-24.04-arm
     
     runs-on: ${{ matrix.platform.runner }}
     name: "Build ${{ matrix.php }} ${{ matrix.platform.arch }}"
@@ -52,8 +52,8 @@ jobs:
           path: downloads
           key: php-dependencies
       
-      - run: ./bin/spc-gnu-docker download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
-      - run: ./bin/spc-gnu-docker build ${{ env.EXTENSIONS }} --enable-zts --build-cli
+      - run: ./bin/spc download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
+      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli
       
       - uses: actions/upload-artifact@v4
         with:

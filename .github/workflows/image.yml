@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         php: ['8.3']
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: "Build and push ${{ matrix.php }}"
     permissions:
       contents: read
