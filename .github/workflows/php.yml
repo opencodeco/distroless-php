@@ -51,7 +51,7 @@ jobs:
         with:
           path: downloads
           key: php-dependencies
-      
+      - run: composer install --prefer-dist --no-dev
       - run: ./bin/spc download --with-php=${{ matrix.php }} --for-extensions=${{ env.EXTENSIONS }}
       - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli
       
