@@ -6,16 +6,30 @@
 
 ## Usage
 
+### Distroless Runtime Images
+
 ```dockerfile
 FROM ghcr.io/opencodeco/distroless-php:8.3
 ```
 
+### Base Images with Composer
+
+For development and build stages, base images are available with Debian, statically built PHP, and Composer:
+
+```dockerfile
+FROM ghcr.io/opencodeco/distroless-php:8.3-base
+```
+
 ### Available PHP Versions
 
+**Runtime Images (Distroless):**
 - `8.1` - PHP 8.1 (multi-arch: AMD64, ARM64)
 - `8.2` - PHP 8.2 (multi-arch: AMD64, ARM64)
 - `8.3` - PHP 8.3 (multi-arch: AMD64, ARM64)
 - `8.4` - PHP 8.4 (multi-arch: AMD64, ARM64)
+
+**Base Images (Debian + Composer):**
+- `8.3-base` - PHP 8.3 with Composer on Debian (multi-arch: AMD64, ARM64)
 
 ## Building
 
@@ -23,7 +37,7 @@ Images are automatically built and published via GitHub Actions using pre-compil
 
 ### CI/CD Pipeline
 
-The project uses a two-stage GitHub Actions pipeline:
+The project uses a multi-stage GitHub Actions pipeline:
 
 1. **PHP Build** (`php.yml`): Builds static PHP binaries for both architectures
    - **Triggers**: Manual workflow dispatch
@@ -39,6 +53,14 @@ The project uses a two-stage GitHub Actions pipeline:
    - **PHP Version**: Currently builds PHP 8.3 (configurable via matrix)
    - **Caching**: Uses GitHub Actions cache for faster builds
    - **Authentication**: Uses `GITHUB_TOKEN` for registry access
+
+3. **Base Image Build** (`base.yml`): Creates Debian-based images with PHP and Composer
+   - **Triggers**: Manual workflow dispatch
+   - **Registry**: GitHub Container Registry (`ghcr.io`)
+   - **Platforms**: Multi-architecture builds for `linux/amd64` and `linux/arm64`
+   - **PHP Version**: Currently builds PHP 8.3 base image
+   - **Features**: Includes statically built PHP binary and Composer on Debian base
+   - **Use Case**: Ideal for development and build stages where you need package managers and build tools
 
 ### Architecture Support
 
@@ -93,12 +115,31 @@ The PHP binaries include 60+ extensions:
 
 ```
 ├── Dockerfile                                    # Multi-arch Dockerfile with build arguments (PHPVERSION, TARGETARCH)
+├── Dockerfile.base                               # Debian-based image with PHP and Composer
 ├── .github/workflows/php.yml                    # PHP binary build pipeline (supports 8.1, 8.2, 8.3, 8.4)
 ├── .github/workflows/image.yml                  # Docker image build pipeline
+├── .github/workflows/base.yml                   # Base image build pipeline
 └── .github/copilot-instructions.md              # Copilot development guidelines
 ```
 
 ### Example
+
+**Using the base image for build stage:**
+
+```dockerfile
+FROM ghcr.io/opencodeco/distroless-php:8.3-base AS build
+WORKDIR /workspace
+COPY composer.* ./
+RUN composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
+COPY . .
+
+FROM ghcr.io/opencodeco/distroless-php:8.3
+COPY --from=build --chown=nonroot:nonroot /workspace /app
+CMD [ "/app/bin/hyperf.php", "start" ]
+EXPOSE 9501
+```
+
+**Traditional approach (still supported):**
 
 ```dockerfile
 FROM composer:2.2 AS composer

@@ -1,0 +1,10 @@
+ARG PHPVERSION
+
+FROM ghcr.io/opencodeco/distroless-php:${PHPVERSION} AS php
+FROM docker.io/composer/composer:2.8-bin AS composer
+FROM docker.io/library/debian:12.11
+
+COPY --from=php /bin/php /usr/local/bin/php
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
