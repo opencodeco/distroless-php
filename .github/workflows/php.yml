@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.3']
         platform:
           - arch: amd64
             runner: ubuntu-latest
