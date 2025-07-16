@@ -4,10 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  EXTENSIONS: amqp,apcu,ast,bcmath,brotli,calendar,ctype,curl,dom,ds,exif,ffi,fileinfo,filter,gd,gettext,iconv,igbinary,imagick,inotify,intl,ldap,libxml,mbregex,mbstring,memcache,memcached,mongodb,msgpack,mysqli,mysqlnd,opcache,openssl,opentelemetry,parallel,password-argon2,pcntl,pdo,pdo_mysql,pgsql,phar,posix,rdkafka,readline,redis,session,shmop,simplexml,soap,sockets,sodium,sqlite3,swoole,swoole-hook-mysql,swoole-hook-pgsql,swoole-hook-sqlite,tokenizer,xlswriter,xml,xmlreader,xmlwriter,xsl,yaml,zip,zlib,zstd
+  EXTENSIONS: amqp,apcu,ast,bcmath,brotli,calendar,ctype,curl,dom,ds,exif,ffi,fileinfo,filter,gd,gettext,iconv,igbinary,inotify,intl,ldap,libxml,mbregex,mbstring,memcache,memcached,mongodb,msgpack,mysqli,mysqlnd,opcache,openssl,opentelemetry,parallel,password-argon2,pcntl,pdo,pdo_mysql,pgsql,phar,posix,rdkafka,readline,redis,session,shmop,simplexml,soap,sockets,sodium,sqlite3,swoole,swoole-hook-mysql,swoole-hook-pgsql,swoole-hook-sqlite,tokenizer,xlswriter,xml,xmlreader,xmlwriter,xsl,yaml,zip,zlib,zstd
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  SPC_LIBC: glibc
-  SPC_TARGET: native-linux
 
 jobs:
   build:
