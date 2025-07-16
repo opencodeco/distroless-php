@@ -32,6 +32,12 @@ jobs:
           echo "Updated swoole rev to v5.1.7"
           grep -A 5 -B 1 '"swoole"' config/source.json || echo "swoole not found in config file"
 
+      - name: Update MongoDB driver to 1.x versions only
+        run: |
+          sed -i '/"mongodb": {/,/}/ s/"match": "[^"]*"/"match": "mongodb-1\\\\.[0-9]+\\\\.[0-9]+\\\\.tgz"/' config/source.json
+          echo "Updated mongodb match to 1.x versions only"
+          grep -A 5 -B 1 '"mongodb"' config/source.json || echo "mongodb not found in config file"
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
