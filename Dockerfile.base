@@ -8,3 +8,5 @@ COPY --from=php /bin/php /usr/local/bin/php
 COPY --from=composer /composer /usr/local/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
+ENTRYPOINT [ "php" ]
