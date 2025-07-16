@@ -61,7 +61,7 @@ jobs:
       
       - run: composer install --prefer-dist --no-dev
       - run: ./bin/spc download --with-php=${{ matrix.php.version }} --for-extensions=${{ env.EXTENSIONS }}
-      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli --debug
+      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli --build-shared="xdebug"
       
       - uses: actions/upload-artifact@v4
         with:
