@@ -4,6 +4,10 @@
 
 > Basically: [static-php-cli](https://github.com/crazywhalecc/static-php-cli) + [distroless](https://github.com/GoogleContainerTools/distroless).
 
+[![Build PHP](https://github.com/opencodeco/distroless-php/actions/workflows/php.yml/badge.svg)](https://github.com/opencodeco/distroless-php/actions/workflows/php.yml)
+[![Build image](https://github.com/opencodeco/distroless-php/actions/workflows/image.yml/badge.svg)](https://github.com/opencodeco/distroless-php/actions/workflows/image.yml)
+[![Build base](https://github.com/opencodeco/distroless-php/actions/workflows/base.yml/badge.svg)](https://github.com/opencodeco/distroless-php/actions/workflows/base.yml)
+
 ## Usage
 
 ### Distroless Runtime Images
