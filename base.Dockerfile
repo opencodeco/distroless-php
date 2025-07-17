@@ -4,7 +4,7 @@ FROM docker.io/library/debian:12.11
 ARG PHPVERSION
 ARG TARGETARCH
 
-COPY php${PHPVERSION}-${TARGETARCH}/bin/php /bin/php
+COPY --chmod=755 php${PHPVERSION}-${TARGETARCH}/bin/php /bin/php
 
 COPY --from=composer /composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
