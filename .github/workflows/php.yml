@@ -61,7 +61,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y libc6-dev
       - run: composer install --prefer-dist --no-dev --no-interaction --optimize-autoloader
       - run: ./bin/spc download --with-php=${{ matrix.php.version }} --for-extensions=${{ env.EXTENSIONS }},xdebug
-      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli --build-shared=xdebug --with-libs=resolv --debug
+      - run: ./bin/spc build ${{ env.EXTENSIONS }} --enable-zts --build-cli --build-shared=xdebug --debug
       
       - uses: actions/upload-artifact@v4
         with:
