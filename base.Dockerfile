@@ -10,6 +10,7 @@ COPY --from=composer /composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY php${PHPVERSION}-${TARGETARCH}/modules/xdebug.so /lib/php/xdebug.so
-RUN echo "zend_extension=/lib/php/xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
+RUN mkdir -p /usr/local/etc/php/conf.d && \
+    echo "zend_extension=/lib/php/xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
 
 ENTRYPOINT [ "php" ]
