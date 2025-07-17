@@ -2,17 +2,12 @@ name: Build base
 
 on:
   workflow_dispatch:
-    inputs:
-      php_version:
-        description: 'PHP version to build base image for'
-        required: true
-        default: '8.3'
-        type: choice
-        options:
-          - '8.3'
 
 jobs:
   build:
+    strategy:
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -39,8 +34,8 @@ jobs:
           file: ./Dockerfile.base
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/opencodeco/distroless-php:${{ inputs.php_version }}-base
+          tags: ghcr.io/opencodeco/distroless-php:${{ matrix.php }}-base
           build-args: |
-            PHPVERSION=${{ inputs.php_version }}
+            PHPVERSION=${{ matrix.php }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
