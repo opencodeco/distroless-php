@@ -11,36 +11,53 @@ You are an expert in:
 ## Project Context
 
 This repository provides **distroless PHP container images** that combine:
-- **Static PHP builds** from [static-php-cli](https://github.com/crazywhalecc/static-php-cli)
+- **Static PHP builds** from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) v2.6.1
 - **Google's distroless base images** for minimal attack surface
 - **Multi-architecture support** (AMD64/ARM64)
+- **Dual image types**: Distroless runtime images and Debian-based development images
 
 ### Key Goals
 - Provide the smallest possible PHP runtime environment
 - Eliminate unnecessary OS packages and dependencies
 - Maintain security through minimal attack surface
 - Support production-ready PHP applications
+- Provide development-friendly base images with Composer and Xdebug
 
 ## Technical Architecture
 
 ### Build Process
 - Uses a two-stage GitHub Actions pipeline:
-  1. **PHP Build** (`php.yml`): Compiles static PHP binaries for multiple versions (8.1-8.4) and architectures
-  2. **Image Build** (`image.yml`): Creates Docker images using the compiled binaries
-- Final stage uses `gcr.io/distroless/cc-debian12:nonroot` base image
+  1. **PHP Build** (`php.yml`): Compiles static PHP binaries for multiple versions (8.1-8.4) and architectures using static-php-cli v2.6.1
+  2. **Image Build** (`image.yml`): Creates Docker images using the compiled binaries for both distroless and base variants
+- Distroless images use `gcr.io/distroless/cc-debian12:nonroot` base image
+- Base images use `debian:12.11` with Composer 2.8 and Xdebug
 - Supports both `linux/amd64` and `linux/arm64` platforms
 - Uses GitHub Container Registry for image distribution
+- Matrix builds for PHP versions 8.1, 8.2, 8.3, and 8.4
+- Architecture-specific runners (ubuntu-24.04 for AMD64, ubuntu-24.04-arm for ARM64)
 
 ### PHP Configuration
 - **Versions**: PHP 8.1, 8.2, 8.3, 8.4 (all supported)
-- **Extensions**: 60+ included extensions (defined in `php.yml` workflow)
+- **Extensions**: 60+ included extensions including:
+  - Core: bcmath, calendar, ctype, curl, dom, exif, ffi, fileinfo, filter, iconv, intl, mbregex, mbstring, opcache, openssl, pcntl, pdo, phar, posix, session, shmop, simplexml, soap, sockets, sodium, sqlite3, tokenizer, xml, xmlreader, xmlwriter, xsl, zip, zlib
+  - Caching: apcu, memcache, memcached, redis
+  - Database: mysqli, mysqlnd, pdo_mysql, pgsql, mongodb
+  - Performance: swoole (v5.1.7 for PHP 8.1-8.3, v6.0.2 for PHP 8.4), parallel, zstd
+  - Graphics: gd, imagick
+  - Development: ast, xdebug (base images only)
+  - Other: amqp, rdkafka, brotli, ds, gettext, igbinary, inotify, ldap, libxml, msgpack, opentelemetry, password-argon2, readline, xlswriter, yaml
 - **Binary location**: `/bin/php` in final image
 - **User**: Runs as non-root user for security
+- **ZTS**: Thread-safe builds enabled
+- **Special configurations**: 
+  - Swoole hooks for MySQL, PostgreSQL, and SQLite
+  - MongoDB driver limited to 1.x versions for compatibility
 
 ### Project Structure
-- `Dockerfile`: Minimal multi-arch configuration with build arguments
-- `.github/workflows/php.yml`: PHP binary compilation pipeline
-- `.github/workflows/image.yml`: Docker image build and push pipeline
+- `distroless.Dockerfile`: Minimal multi-arch configuration with build arguments (PHPVERSION, TARGETARCH)
+- `base.Dockerfile`: Debian-based image with PHP, Composer 2.8, and Xdebug
+- `.github/workflows/php.yml`: PHP binary compilation pipeline using static-php-cli v2.6.1
+- `.github/workflows/image.yml`: Docker image build and push pipeline for both image types
 - `.github/copilot-instructions.md`: Development guidelines
 - Pre-compiled PHP binaries are built via GitHub Actions using static-php-cli
 
@@ -51,13 +68,15 @@ This repository provides **distroless PHP container images** that combine:
 - Minimize layers and build context
 - Use appropriate ARG variables (PHPVERSION, TARGETARCH) for target architecture
 - Follow security best practices (non-root user, minimal permissions)
+- Two separate Dockerfiles: `distroless.Dockerfile` for runtime and `base.Dockerfile` for development
 
 ### When working with workflows:
 - **PHP Build Workflow**: Triggered manually via workflow_dispatch
 - **Image Build Workflow**: Requires a PHP workflow run ID as input
 - Test on both AMD64 and ARM64 architectures using matrix strategy
 - Extensions are defined in the `EXTENSIONS` environment variable in `php.yml`
-- Current image builds focus on PHP 8.3 but can be expanded via matrix strategy
+- Both workflows support all PHP versions (8.1, 8.2, 8.3, 8.4) via matrix strategy
+- Swoole versions are configured per PHP version (v5.1.7 for 8.1-8.3, v6.0.2 for 8.4)
 
 ### When modifying build processes:
 - Test on both AMD64 and ARM64 architectures using matrix strategy
