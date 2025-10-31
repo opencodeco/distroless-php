@@ -42,7 +42,7 @@ This repository provides **distroless PHP container images** that combine:
   - Core: bcmath, calendar, ctype, curl, dom, exif, ffi, fileinfo, filter, iconv, intl, mbregex, mbstring, opcache, openssl, pcntl, pdo, phar, posix, session, shmop, simplexml, soap, sockets, sodium, sqlite3, tokenizer, xml, xmlreader, xmlwriter, xsl, zip, zlib
   - Caching: apcu, memcache, memcached, redis
   - Database: mysqli, mysqlnd, pdo_mysql, pgsql, mongodb
-  - Performance: swoole (v5.1.7 for PHP 8.1-8.3, v6.0.2 for PHP 8.4), zstd
+  - Performance: swoole (v5.1.8 for PHP 8.1-8.3, v6.0.2 for PHP 8.4), zstd
   - Graphics: gd, imagick
   - Development: ast, xdebug (base images only)
   - Other: amqp, rdkafka, brotli, ds, gettext, igbinary, inotify, ldap, libxml, msgpack, opentelemetry, password-argon2, readline, xlswriter, yaml
@@ -76,7 +76,7 @@ This repository provides **distroless PHP container images** that combine:
 - Test on both AMD64 and ARM64 architectures using matrix strategy
 - Extensions are defined in the `EXTENSIONS` environment variable in `php.yml`
 - Both workflows support all PHP versions (8.1, 8.2, 8.3, 8.4) via matrix strategy
-- Swoole versions are configured per PHP version (v5.1.7 for 8.1-8.3, v6.0.2 for 8.4)
+- Swoole versions are configured per PHP version (v5.1.8 for 8.1-8.3, v6.0.2 for 8.4)
 
 ### When modifying build processes:
 - Test on both AMD64 and ARM64 architectures using matrix strategy

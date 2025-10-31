@@ -97,7 +97,7 @@ The complete build process consists of two stages:
    - Creates static PHP binaries for both AMD64 and ARM64 architectures
    - Uses matrix builds with architecture-specific runners (ubuntu-24.04 for AMD64, ubuntu-24.04-arm for ARM64)
    - Includes Xdebug extension as a shared module for base images
-   - Updates Swoole to specific versions per PHP version (v5.1.7 for PHP 8.1-8.3, v6.0.2 for PHP 8.4)
+   - Updates Swoole to specific versions per PHP version (v5.1.8 for PHP 8.1-8.3, v6.0.2 for PHP 8.4)
    - Uploads binaries as GitHub artifacts with version and architecture naming
 
 2. **Docker Image Creation** (`image.yml`):
