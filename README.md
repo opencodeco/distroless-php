@@ -68,7 +68,7 @@ The project uses a two-stage GitHub Actions pipeline:
    - **Triggers**: Manual workflow dispatch
    - **PHP Versions**: 8.1, 8.2, 8.3, 8.4
    - **Platforms**: `linux/amd64` and `linux/arm64`
-   - **Extensions**: 60+ extensions including amqp, apcu, ast, bcmath, brotli, calendar, ctype, curl, dom, ds, exif, ffi, fileinfo, filter, gd, gettext, iconv, igbinary, imagick, inotify, intl, ldap, libxml, mbregex, mbstring, memcache, memcached, mongodb, msgpack, mysqli, mysqlnd, opcache, openssl, opentelemetry, parallel, password-argon2, pcntl, pdo, pdo_mysql, pgsql, phar, posix, rdkafka, readline, redis, session, shmop, simplexml, soap, sockets, sodium, sqlite3, swoole, swoole-hook-mysql, swoole-hook-pgsql, swoole-hook-sqlite, tokenizer, xlswriter, xml, xmlreader, xmlwriter, xsl, yaml, zip, zlib, zstd
+   - **Extensions**: 60+ extensions including amqp, apcu, ast, bcmath, brotli, calendar, ctype, curl, dom, ds, exif, ffi, fileinfo, filter, gd, gettext, iconv, igbinary, imagick, inotify, intl, ldap, libxml, mbregex, mbstring, memcache, memcached, mongodb, msgpack, mysqli, mysqlnd, opcache, openssl, opentelemetry, password-argon2, pcntl, pdo, pdo_mysql, pgsql, phar, posix, rdkafka, readline, redis, session, shmop, simplexml, soap, sockets, sodium, sqlite3, swoole, swoole-hook-mysql, swoole-hook-pgsql, swoole-hook-sqlite, tokenizer, xlswriter, xml, xmlreader, xmlwriter, xsl, yaml, zip, zlib, zstd
    - **Additional**: Includes Xdebug extension for base images
    - **Artifacts**: Uploads compiled PHP binaries as GitHub artifacts
 
@@ -127,7 +127,7 @@ The PHP binaries include 60+ extensions:
 - **Caching**: apcu, memcache, memcached, redis
 - **Database**: mysqli, mysqlnd, pdo_mysql, pgsql, mongodb
 - **Messaging**: amqp, rdkafka
-- **Performance**: swoole, swoole-hook-mysql, swoole-hook-pgsql, swoole-hook-sqlite, parallel, zstd
+- **Performance**: swoole, swoole-hook-mysql, swoole-hook-pgsql, swoole-hook-sqlite, zstd
 - **Graphics**: gd, imagick
 - **Development**: ast, ffi, xdebug (base images only)
 - **Serialization**: igbinary, msgpack, yaml
