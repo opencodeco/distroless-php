@@ -11,7 +11,7 @@ You are an expert in:
 ## Project Context
 
 This repository provides **distroless PHP container images** that combine:
-- **Static PHP builds** from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) v2.6.1
+- **Static PHP builds** from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) v2.7.6
 - **Google's distroless base images** for minimal attack surface
 - **Multi-architecture support** (AMD64/ARM64)
 - **Dual image types**: Distroless runtime images and Debian-based development images
@@ -27,7 +27,7 @@ This repository provides **distroless PHP container images** that combine:
 
 ### Build Process
 - Uses a two-stage GitHub Actions pipeline:
-  1. **PHP Build** (`php.yml`): Compiles static PHP binaries for multiple versions (8.1-8.4) and architectures using static-php-cli v2.6.1
+  1. **PHP Build** (`php.yml`): Compiles static PHP binaries for multiple versions (8.1-8.4) and architectures using static-php-cli v2.7.6
   2. **Image Build** (`image.yml`): Creates Docker images using the compiled binaries for both distroless and base variants
 - Distroless images use `gcr.io/distroless/cc-debian12:nonroot` base image
 - Base images use `debian:12.11` with Composer 2.8 and Xdebug
@@ -42,7 +42,7 @@ This repository provides **distroless PHP container images** that combine:
   - Core: bcmath, calendar, ctype, curl, dom, exif, ffi, fileinfo, filter, iconv, intl, mbregex, mbstring, opcache, openssl, pcntl, pdo, phar, posix, session, shmop, simplexml, soap, sockets, sodium, sqlite3, tokenizer, xml, xmlreader, xmlwriter, xsl, zip, zlib
   - Caching: apcu, memcache, memcached, redis
   - Database: mysqli, mysqlnd, pdo_mysql, pgsql, mongodb
-  - Performance: swoole (v5.1.7 for PHP 8.1-8.3, v6.0.2 for PHP 8.4), zstd
+  - Performance: swoole (v5.1.8 for PHP 8.1-8.3, v6.0.2 for PHP 8.4), zstd
   - Graphics: gd, imagick
   - Development: ast, xdebug (base images only)
   - Other: amqp, rdkafka, brotli, ds, gettext, igbinary, inotify, ldap, libxml, msgpack, opentelemetry, password-argon2, readline, xlswriter, yaml
@@ -56,7 +56,7 @@ This repository provides **distroless PHP container images** that combine:
 ### Project Structure
 - `distroless.Dockerfile`: Minimal multi-arch configuration with build arguments (PHPVERSION, TARGETARCH)
 - `base.Dockerfile`: Debian-based image with PHP, Composer 2.8, and Xdebug
-- `.github/workflows/php.yml`: PHP binary compilation pipeline using static-php-cli v2.6.1
+- `.github/workflows/php.yml`: PHP binary compilation pipeline using static-php-cli v2.7.6
 - `.github/workflows/image.yml`: Docker image build and push pipeline for both image types
 - `.github/copilot-instructions.md`: Development guidelines
 - Pre-compiled PHP binaries are built via GitHub Actions using static-php-cli
@@ -76,7 +76,7 @@ This repository provides **distroless PHP container images** that combine:
 - Test on both AMD64 and ARM64 architectures using matrix strategy
 - Extensions are defined in the `EXTENSIONS` environment variable in `php.yml`
 - Both workflows support all PHP versions (8.1, 8.2, 8.3, 8.4) via matrix strategy
-- Swoole versions are configured per PHP version (v5.1.7 for 8.1-8.3, v6.0.2 for 8.4)
+- Swoole versions are configured per PHP version (v5.1.8 for 8.1-8.3, v6.0.2 for 8.4)
 
 ### When modifying build processes:
 - Test on both AMD64 and ARM64 architectures using matrix strategy

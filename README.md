@@ -91,13 +91,13 @@ The project uses a two-stage GitHub Actions pipeline:
 The complete build process consists of two stages:
 
 1. **PHP Binary Compilation** (`php.yml`):
-   - Checks out the [static-php-cli](https://github.com/crazywhalecc/static-php-cli) repository (version 2.6.1)
+   - Checks out the [static-php-cli](https://github.com/crazywhalecc/static-php-cli) repository (version 2.7.6)
    - Sets up PHP build environment with required tools and extensions
    - Downloads dependencies and compiles PHP with all extensions for multiple PHP versions (8.1, 8.2, 8.3, 8.4)
    - Creates static PHP binaries for both AMD64 and ARM64 architectures
    - Uses matrix builds with architecture-specific runners (ubuntu-24.04 for AMD64, ubuntu-24.04-arm for ARM64)
    - Includes Xdebug extension as a shared module for base images
-   - Updates Swoole to specific versions per PHP version (v5.1.7 for PHP 8.1-8.3, v6.0.2 for PHP 8.4)
+   - Updates Swoole to specific versions per PHP version (v5.1.8 for PHP 8.1-8.3, v6.0.2 for PHP 8.4)
    - Uploads binaries as GitHub artifacts with version and architecture naming
 
 2. **Docker Image Creation** (`image.yml`):
@@ -114,7 +114,7 @@ The complete build process consists of two stages:
 
 This project combines static PHP binaries with Google's Distroless base images to create minimal, secure PHP runtime containers:
 
-1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) v2.6.1 are built with 60+ extensions for multiple PHP versions (8.1, 8.2, 8.3, 8.4)
+1. **Static PHP Binaries**: Pre-compiled PHP binaries from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) v2.7.6 are built with 60+ extensions for multiple PHP versions (8.1, 8.2, 8.3, 8.4)
 2. **Multi-arch Build**: Docker build process uses architecture-specific binaries (AMD64 or ARM64) via build arguments (PHPVERSION and TARGETARCH)
 3. **Distroless Base**: Uses `gcr.io/distroless/cc-debian12:nonroot` for minimal attack surface and runs as non-root user
 4. **Base Images**: Debian 12.11-based images with Composer 2.8 and Xdebug for development workflows
